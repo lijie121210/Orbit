@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15G1004" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="8FM-8N-zxU">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="CJO-jy-fYS">
+            <objects>
+                <viewController id="8FM-8N-zxU" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="1U6-4Z-jDf"/>
+                        <viewControllerLayoutGuide type="bottom" id="gvF-rd-RG3"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="nc4-kd-hen">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JN6-2u-MAL">
+                                <rect key="frame" x="0.0" y="64" width="600" height="1"/>
+                                <color key="backgroundColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="1" id="Azw-kn-utb"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="JN6-2u-MAL" firstAttribute="centerX" secondItem="nc4-kd-hen" secondAttribute="centerX" id="Ljo-3L-bXu"/>
+                            <constraint firstItem="JN6-2u-MAL" firstAttribute="top" secondItem="1U6-4Z-jDf" secondAttribute="bottom" constant="44" id="aXR-Yo-0FV"/>
+                            <constraint firstItem="JN6-2u-MAL" firstAttribute="width" secondItem="nc4-kd-hen" secondAttribute="width" id="u4S-I7-Fea"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="x0H-tJ-cqK" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="286" y="400"/>
+        </scene>
+    </scenes>
+</document>

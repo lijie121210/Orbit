@@ -8,12 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		18C207421D90B46800EE987D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C207411D90B46800EE987D /* AppDelegate.swift */; };
-		18C207441D90B46800EE987D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C207431D90B46800EE987D /* ViewController.swift */; };
 		18C207471D90B46900EE987D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 18C207451D90B46900EE987D /* Main.storyboard */; };
 		18C207491D90B46900EE987D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 18C207481D90B46900EE987D /* Assets.xcassets */; };
-		18C2074C1D90B46900EE987D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 18C2074A1D90B46900EE987D /* LaunchScreen.storyboard */; };
 		18C207571D90B46900EE987D /* OrbitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C207561D90B46900EE987D /* OrbitTests.swift */; };
 		18C207621D90B46900EE987D /* OrbitUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C207611D90B46900EE987D /* OrbitUITests.swift */; };
+		18C207701D90B52600EE987D /* LaunchOrbit.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 18C2076F1D90B52600EE987D /* LaunchOrbit.storyboard */; };
+		18C207741D90BAF200EE987D /* OrbitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C207731D90BAF200EE987D /* OrbitView.swift */; };
+		18C207761D90C83500EE987D /* OrbitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C207751D90C83500EE987D /* OrbitViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,12 +35,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		180E6C5F1D90E860008F2C78 /* OribitPlay.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = OribitPlay.playground; sourceTree = "<group>"; };
 		18C2073E1D90B46800EE987D /* Orbit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Orbit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		18C207411D90B46800EE987D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		18C207431D90B46800EE987D /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		18C207461D90B46900EE987D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		18C207481D90B46900EE987D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		18C2074B1D90B46900EE987D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		18C2074D1D90B46900EE987D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		18C207521D90B46900EE987D /* OrbitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OrbitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		18C207561D90B46900EE987D /* OrbitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrbitTests.swift; sourceTree = "<group>"; };
@@ -47,6 +47,9 @@
 		18C2075D1D90B46900EE987D /* OrbitUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OrbitUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		18C207611D90B46900EE987D /* OrbitUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrbitUITests.swift; sourceTree = "<group>"; };
 		18C207631D90B46900EE987D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		18C2076F1D90B52600EE987D /* LaunchOrbit.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchOrbit.storyboard; sourceTree = "<group>"; };
+		18C207731D90BAF200EE987D /* OrbitView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrbitView.swift; sourceTree = "<group>"; };
+		18C207751D90C83500EE987D /* OrbitViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrbitViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,11 +100,13 @@
 		18C207401D90B46800EE987D /* Orbit */ = {
 			isa = PBXGroup;
 			children = (
+				180E6C5F1D90E860008F2C78 /* OribitPlay.playground */,
 				18C207411D90B46800EE987D /* AppDelegate.swift */,
-				18C207431D90B46800EE987D /* ViewController.swift */,
+				18C207751D90C83500EE987D /* OrbitViewController.swift */,
+				18C207731D90BAF200EE987D /* OrbitView.swift */,
 				18C207451D90B46900EE987D /* Main.storyboard */,
+				18C2076F1D90B52600EE987D /* LaunchOrbit.storyboard */,
 				18C207481D90B46900EE987D /* Assets.xcassets */,
-				18C2074A1D90B46900EE987D /* LaunchScreen.storyboard */,
 				18C2074D1D90B46900EE987D /* Info.plist */,
 			);
 			path = Orbit;
@@ -229,8 +234,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				18C2074C1D90B46900EE987D /* LaunchScreen.storyboard in Resources */,
 				18C207491D90B46900EE987D /* Assets.xcassets in Resources */,
+				18C207701D90B52600EE987D /* LaunchOrbit.storyboard in Resources */,
 				18C207471D90B46900EE987D /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -256,8 +261,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				18C207441D90B46800EE987D /* ViewController.swift in Sources */,
 				18C207421D90B46800EE987D /* AppDelegate.swift in Sources */,
+				18C207741D90BAF200EE987D /* OrbitView.swift in Sources */,
+				18C207761D90C83500EE987D /* OrbitViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -299,14 +305,6 @@
 				18C207461D90B46900EE987D /* Base */,
 			);
 			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		18C2074A1D90B46900EE987D /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				18C2074B1D90B46900EE987D /* Base */,
-			);
-			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -484,6 +482,7 @@
 				18C207681D90B46900EE987D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		18C207691D90B46900EE987D /* Build configuration list for PBXNativeTarget "OrbitTests" */ = {
 			isa = XCConfigurationList;
@@ -492,6 +491,7 @@
 				18C2076B1D90B46900EE987D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		18C2076C1D90B46900EE987D /* Build configuration list for PBXNativeTarget "OrbitUITests" */ = {
 			isa = XCConfigurationList;
@@ -500,6 +500,7 @@
 				18C2076E1D90B46900EE987D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
