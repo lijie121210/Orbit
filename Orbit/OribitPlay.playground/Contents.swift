@@ -10,22 +10,22 @@ class OrbitView: UIView {
     
     func start() {
         self.display = CADisplayLink(target: vi, selector: #selector(OrbitView.fireDisplayLink))
-        self.display?.addToRunLoop(NSRunLoop.currentRunLoop(), forMode: NSDefaultRunLoopMode)
+        self.display?.add(to: RunLoop.current, forMode: RunLoopMode.defaultRunLoopMode)
     }
     func fireDisplayLink() {
-        self.transform = CGAffineTransformMakeRotation(angle)
+        self.transform = CGAffineTransform(rotationAngle: angle)
         print("firing...")
     }
 }
 
 var vi = OrbitView(frame: CGRect(x: 100,y: 100,width: 300,height: 300))
-vi.backgroundColor = UIColor.blackColor()
+vi.backgroundColor = UIColor.black
 vi.layer.cornerRadius = 150.0
-vi.layer.borderColor = UIColor.purpleColor().CGColor
+vi.layer.borderColor = UIColor.purple.cgColor
 vi.layer.borderWidth = 1.0
 
 var line = UIView(frame: CGRect(x: 10,y: 149,width: 280,height: 2))
-line.backgroundColor = UIColor.whiteColor()
+line.backgroundColor = UIColor.white
 vi.addSubview(line)
 
 vi.start()
