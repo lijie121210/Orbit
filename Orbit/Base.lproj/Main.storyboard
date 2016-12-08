@@ -20,21 +20,7 @@
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GTH-3S-GsR" customClass="OrbitView" customModule="Orbit" customModuleProvider="target">
-                                <rect key="frame" x="37.5" y="183.5" width="300" height="300"/>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="300" id="4MD-Au-lb6"/>
-                                    <constraint firstAttribute="height" constant="300" id="Igu-jZ-ZYF"/>
-                                </constraints>
-                            </view>
-                        </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <constraints>
-                            <constraint firstItem="GTH-3S-GsR" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="8Sk-bX-oOI"/>
-                            <constraint firstItem="GTH-3S-GsR" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="geY-bt-DIL"/>
-                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="tig-JE-YQS"/>
                 </viewController>

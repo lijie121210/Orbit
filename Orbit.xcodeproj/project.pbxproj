@@ -7,13 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		188EED7B1DF7F32500848BAD /* OrbitPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 188EED7A1DF7F32500848BAD /* OrbitPoint.swift */; };
+		188EED7D1DF84C8600848BAD /* OrbitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 188EED7C1DF84C8600848BAD /* OrbitView.swift */; };
+		188EED7F1DF99D5200848BAD /* OrbitSphere.swift in Sources */ = {isa = PBXBuildFile; fileRef = 188EED7E1DF99D5200848BAD /* OrbitSphere.swift */; };
 		18C207421D90B46800EE987D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C207411D90B46800EE987D /* AppDelegate.swift */; };
 		18C207471D90B46900EE987D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 18C207451D90B46900EE987D /* Main.storyboard */; };
 		18C207491D90B46900EE987D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 18C207481D90B46900EE987D /* Assets.xcassets */; };
 		18C207571D90B46900EE987D /* OrbitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C207561D90B46900EE987D /* OrbitTests.swift */; };
 		18C207621D90B46900EE987D /* OrbitUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C207611D90B46900EE987D /* OrbitUITests.swift */; };
 		18C207701D90B52600EE987D /* LaunchOrbit.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 18C2076F1D90B52600EE987D /* LaunchOrbit.storyboard */; };
-		18C207741D90BAF200EE987D /* OrbitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C207731D90BAF200EE987D /* OrbitView.swift */; };
+		18C207741D90BAF200EE987D /* OrbitViewOld.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C207731D90BAF200EE987D /* OrbitViewOld.swift */; };
 		18C207761D90C83500EE987D /* OrbitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C207751D90C83500EE987D /* OrbitViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -35,7 +38,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		180E6C5F1D90E860008F2C78 /* OribitPlay.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = OribitPlay.playground; sourceTree = "<group>"; };
+		188EED7A1DF7F32500848BAD /* OrbitPoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrbitPoint.swift; sourceTree = "<group>"; };
+		188EED7C1DF84C8600848BAD /* OrbitView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrbitView.swift; sourceTree = "<group>"; };
+		188EED7E1DF99D5200848BAD /* OrbitSphere.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrbitSphere.swift; sourceTree = "<group>"; };
 		18C2073E1D90B46800EE987D /* Orbit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Orbit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		18C207411D90B46800EE987D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		18C207461D90B46900EE987D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -48,7 +53,7 @@
 		18C207611D90B46900EE987D /* OrbitUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrbitUITests.swift; sourceTree = "<group>"; };
 		18C207631D90B46900EE987D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		18C2076F1D90B52600EE987D /* LaunchOrbit.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchOrbit.storyboard; sourceTree = "<group>"; };
-		18C207731D90BAF200EE987D /* OrbitView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrbitView.swift; sourceTree = "<group>"; };
+		18C207731D90BAF200EE987D /* OrbitViewOld.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrbitViewOld.swift; sourceTree = "<group>"; };
 		18C207751D90C83500EE987D /* OrbitViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrbitViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -100,10 +105,12 @@
 		18C207401D90B46800EE987D /* Orbit */ = {
 			isa = PBXGroup;
 			children = (
-				180E6C5F1D90E860008F2C78 /* OribitPlay.playground */,
 				18C207411D90B46800EE987D /* AppDelegate.swift */,
 				18C207751D90C83500EE987D /* OrbitViewController.swift */,
-				18C207731D90BAF200EE987D /* OrbitView.swift */,
+				188EED7A1DF7F32500848BAD /* OrbitPoint.swift */,
+				188EED7C1DF84C8600848BAD /* OrbitView.swift */,
+				188EED7E1DF99D5200848BAD /* OrbitSphere.swift */,
+				18C207731D90BAF200EE987D /* OrbitViewOld.swift */,
 				18C207451D90B46900EE987D /* Main.storyboard */,
 				18C2076F1D90B52600EE987D /* LaunchOrbit.storyboard */,
 				18C207481D90B46900EE987D /* Assets.xcassets */,
@@ -266,8 +273,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				18C207421D90B46800EE987D /* AppDelegate.swift in Sources */,
-				18C207741D90BAF200EE987D /* OrbitView.swift in Sources */,
+				18C207741D90BAF200EE987D /* OrbitViewOld.swift in Sources */,
 				18C207761D90C83500EE987D /* OrbitViewController.swift in Sources */,
+				188EED7F1DF99D5200848BAD /* OrbitSphere.swift in Sources */,
+				188EED7B1DF7F32500848BAD /* OrbitPoint.swift in Sources */,
+				188EED7D1DF84C8600848BAD /* OrbitView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

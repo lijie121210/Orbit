@@ -33,4 +33,18 @@ class OrbitTests: XCTestCase {
         }
     }
     
+    func testPoint() {
+        let x: CGFloat = 12.0
+        let y: CGFloat = -5.0
+        let z: CGFloat = 3.0
+        
+        let vector = OrbitPoint(x: -1.0, y: 2.0, z: 3.0)
+        
+        let point1 = OrbitPoint(x: x, y: y, z: z)
+        
+        let point2 = point1.rotated(by: CGFloat(M_PI_4 / 2.0), about: vector)
+        
+        print(point2.x, point2.y, point2.z)
+    }
+    
 }
