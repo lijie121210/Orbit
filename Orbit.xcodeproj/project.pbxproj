@@ -107,8 +107,8 @@
 			children = (
 				18C207411D90B46800EE987D /* AppDelegate.swift */,
 				18C207751D90C83500EE987D /* OrbitViewController.swift */,
-				188EED7A1DF7F32500848BAD /* OrbitPoint.swift */,
 				188EED7C1DF84C8600848BAD /* OrbitView.swift */,
+				188EED7A1DF7F32500848BAD /* OrbitPoint.swift */,
 				188EED7E1DF99D5200848BAD /* OrbitSphere.swift */,
 				18C207731D90BAF200EE987D /* OrbitViewOld.swift */,
 				18C207451D90B46900EE987D /* Main.storyboard */,
