@@ -124,7 +124,7 @@ extension OrbitView {
         view.layer.sublayerTransform = t
     }
     
-    /// Crescent-like shadows
+    /// 月牙阴影
     func crescentShapeLayer(radius: CGFloat, fillColor: UIColor = UIColor(white: 0.96, alpha: 1)) -> CAShapeLayer {
         
         let path = UIBezierPath(arcCenter: CGPoint(x: radius, y: radius),
@@ -162,6 +162,8 @@ extension OrbitView {
         let width = tailor.widthOfRing
         let ring = UIView(frame: CGRect(x: tailor.xdistanceOfRing, y: tailor.ydistanceOfRing, width: width, height: width))
         ring.layer.cornerRadius = width.divided(by: 2.0)
+        ring.layer.borderColor = UIColor.black.cgColor
+        ring.layer.borderWidth = 1.0
         return ring
     }
     
@@ -185,7 +187,6 @@ extension OrbitView {
         
         
         let radius: CGFloat = 100.0
-        let offset: CGFloat = 10.0
         let poffset: CGFloat = 40.0
         
         /// 创建两个200x200的矩形，并剪裁成圆, 
@@ -212,35 +213,6 @@ extension OrbitView {
         
         
         /*
-         * Circle of the horizontal direction
-         */
-        let cxpoint = CGPoint(x: radius + offset, y: radius + offset)
-        let sxangle = CGFloat(0)
-        let exangle = CGFloat(M_PI * 2.0)
-        let cxpath = UIBezierPath(arcCenter: cxpoint, radius: radius + offset, startAngle: sxangle, endAngle: exangle, clockwise: false)
-        let cxcircle = CAShapeLayer()
-        cxcircle.path = cxpath.cgPath
-        cxcircle.fillColor = UIColor.clear.cgColor
-        cxcircle.strokeColor = UIColor.black.cgColor
-        cxcircle.lineWidth = 1.0
-        vx.layer.addSublayer(cxcircle)
-        
-        /*
-         * Circle of the vertical direction
-         */
-        let cypoint = CGPoint(x: radius + offset, y: radius + offset)
-        let syangle = CGFloat(0.0)
-        let eyangle = CGFloat(M_PI * 2.0)
-        let cypath = UIBezierPath(arcCenter: cypoint, radius: radius + offset, startAngle: syangle, endAngle: eyangle, clockwise: true)
-        let cycircle = CAShapeLayer()
-        cycircle.path = cypath.cgPath
-        cycircle.fillColor = UIColor.clear.cgColor
-        cycircle.strokeColor = UIColor.black.cgColor
-        cycircle.lineWidth = 1.0
-        vy.layer.addSublayer(cycircle)
-        
-        
-        /*
          * Point
          */
         let cppoint = CGPoint(x: radius + poffset, y: radius + poffset)
@@ -251,7 +223,7 @@ extension OrbitView {
         cpcircle.path = cppath.cgPath
         cpcircle.fillColor = UIColor.clear.cgColor
         cpcircle.strokeColor = UIColor.black.cgColor
-        cpcircle.lineWidth = 4.0
+        cpcircle.lineWidth = 2.0
         vp.layer.addSublayer(cpcircle)
         
         let cppoint2 = CGPoint(x: radius + poffset, y: radius + poffset)
@@ -262,12 +234,11 @@ extension OrbitView {
         cpcircle2.path = cppath2.cgPath
         cpcircle2.fillColor = UIColor.clear.cgColor
         cpcircle2.strokeColor = UIColor.black.cgColor
-        cpcircle2.lineWidth = 4.0
+        cpcircle2.lineWidth = 2.0
         vp2.layer.addSublayer(cpcircle2)
         
         
         /* Animation */
-        
         
         
         /*
@@ -300,7 +271,7 @@ extension OrbitView {
         cpcircle.add(circleStroke, forKey: "star_strokeStart")
         cpcircle2.add(circleStroke, forKey: "star_strokeStart2")
         
-        let circleStrokeEnd = animation(keyPath: AnimKey.strokeEnd.rawValue, from: 0.008, to: 1.008, repeatCount: Float.greatestFiniteMagnitude, duration: 2, timingFunction: kCAMediaTimingFunctionLinear, autoreverses: false)
+        let circleStrokeEnd = animation(keyPath: AnimKey.strokeEnd.rawValue, from: 0.004, to: 1.004, repeatCount: Float.greatestFiniteMagnitude, duration: 2, timingFunction: kCAMediaTimingFunctionLinear, autoreverses: false)
         
         cpcircle.add(circleStrokeEnd, forKey: "star_strokeEnd")
         cpcircle2.add(circleStrokeEnd, forKey: "star_strokeEnd2")
