@@ -40,6 +40,7 @@ class OrbitViewController: UIViewController {
         super.viewDidLoad()
         
         test1()
+        
     }
 
 }

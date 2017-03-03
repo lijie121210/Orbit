@@ -45,6 +45,8 @@ extension OrbitView {
         case strokeStart = "strokeStart"
         
         case strokeEnd = "strokeEnd"
+        
+        case position = "position"
     }
     
     struct Tailor {
@@ -52,7 +54,7 @@ extension OrbitView {
         var baseSize: CGSize
         
         var shortLength: CGFloat {
-            return (baseSize.width > baseSize.height) ? baseSize.height : baseSize.width
+            return min(baseSize.height, baseSize.width)
         }
         
         /// 计算背景圆参数
@@ -174,20 +176,69 @@ extension OrbitView {
         return star
     }
     
+    func point(width: CGFloat = 2.0) -> UIView {
+        let p = UIView(frame: CGRect(origin: CGPoint.zero, size: CGSize(width: width, height: width)))
+        p.layer.cornerRadius = width.divided(by: 2.0)
+        p.backgroundColor = .black
+        return p
+    }
+    
+    func positionAnimation(for rect: CGRect, duration: CFTimeInterval) -> CAKeyframeAnimation {
+        let path = UIBezierPath(roundedRect: rect, cornerRadius: rect.width * 0.5)
+        let an = CAKeyframeAnimation(keyPath: AnimKey.position.rawValue)
+        an.path = path.cgPath
+        an.rotationMode = kCAAnimationRotateAuto
+        an.calculationMode = kCAAnimationPaced
+        an.duration = duration
+        an.repeatCount = Float.greatestFiniteMagnitude
+        return an
+    }
+    
+    func createStarPath(size: CGSize) -> CGPath {
+        let numberOfPoints: CGFloat = 5
+        
+        let starRatio: CGFloat = 0.5
+        
+        let steps: CGFloat = numberOfPoints * 2
+        
+        let outerRadius: CGFloat = min(size.height, size.width) / 2
+        let innerRadius: CGFloat = outerRadius * starRatio
+        
+        let stepAngle = CGFloat(2) * CGFloat(M_PI) / CGFloat(steps)
+        let center = CGPoint(x: size.width / 2, y: size.height / 2)
+        
+        let path = CGMutablePath()
+        
+        for i in 0..<Int(steps) {
+            let radius = i % 2 == 0 ? outerRadius : innerRadius
+            
+            let angle = CGFloat(i) * stepAngle - CGFloat(M_PI_2)
+            
+            let x = radius * cos(angle) + center.x
+            let y = radius * sin(angle) + center.y
+            
+            let point = CGPoint(x: x, y: y)
+            
+            if i == 0 {
+                path.move(to: point)
+            }
+            else {
+                path.addLine(to: point)
+            }
+        }
+        
+        path.closeSubpath()
+
+        return path
+    }
+    
     func launchOrbit() {
     
         let view = self
         
         perspective(on: self)
         
-        // todo: using func
-        // todo: recalculate radius based on fram
-        
         let tailor = Tailor(baseSize: frame.size)
-        
-        
-        let radius: CGFloat = 100.0
-        let poffset: CGFloat = 40.0
         
         /// 创建两个200x200的矩形，并剪裁成圆, 
         /// 背景圆
@@ -212,34 +263,19 @@ extension OrbitView {
         view.addSubview(vp2)
         
         
-        /*
-         * Point
-         */
-        let cppoint = CGPoint(x: radius + poffset, y: radius + poffset)
-        let spangle = CGFloat(0.0)
-        let epangle = CGFloat(M_PI * 2.0)
-        let cppath = UIBezierPath(arcCenter: cppoint, radius: radius + poffset, startAngle: spangle, endAngle: epangle, clockwise: true)
-        let cpcircle = CAShapeLayer()
-        cpcircle.path = cppath.cgPath
-        cpcircle.fillColor = UIColor.clear.cgColor
-        cpcircle.strokeColor = UIColor.black.cgColor
-        cpcircle.lineWidth = 2.0
-        vp.layer.addSublayer(cpcircle)
+        /// 创建一个点
         
-        let cppoint2 = CGPoint(x: radius + poffset, y: radius + poffset)
-        let spangle2 = CGFloat(0.0)
-        let epangle2 = CGFloat(M_PI * 2.0)
-        let cppath2 = UIBezierPath(arcCenter: cppoint2, radius: radius + poffset, startAngle: spangle2, endAngle: epangle2, clockwise: true)
-        let cpcircle2 = CAShapeLayer()
-        cpcircle2.path = cppath2.cgPath
-        cpcircle2.fillColor = UIColor.clear.cgColor
-        cpcircle2.strokeColor = UIColor.black.cgColor
-        cpcircle2.lineWidth = 2.0
-        vp2.layer.addSublayer(cpcircle2)
+        let p1 = point(width: 4.0)
+        vp.addSubview(p1)
+
+        let p2 = point(width: 4.0)
+        vp2.addSubview(p2)
         
+        let an = positionAnimation(for: vp.bounds.insetBy(dx: 4, dy: 4), duration: 10.0)
+        p1.layer.add(an, forKey: "p1")
+        p2.layer.add(an, forKey: "p2")
         
         /* Animation */
-        
         
         /*
          * The rotation of the circle in the horizontal direction
@@ -263,18 +299,6 @@ extension OrbitView {
         
         vy.layer.add(vyrz, forKey: "vyz")
         
-        /*
-         * change to Point
-         */
-        let circleStroke = animation(keyPath: AnimKey.strokeStart.rawValue, from: 0, to: 1, repeatCount: Float.greatestFiniteMagnitude, duration: 2, timingFunction: kCAMediaTimingFunctionLinear, autoreverses: false)
-        
-        cpcircle.add(circleStroke, forKey: "star_strokeStart")
-        cpcircle2.add(circleStroke, forKey: "star_strokeStart2")
-        
-        let circleStrokeEnd = animation(keyPath: AnimKey.strokeEnd.rawValue, from: 0.004, to: 1.004, repeatCount: Float.greatestFiniteMagnitude, duration: 2, timingFunction: kCAMediaTimingFunctionLinear, autoreverses: false)
-        
-        cpcircle.add(circleStrokeEnd, forKey: "star_strokeEnd")
-        cpcircle2.add(circleStrokeEnd, forKey: "star_strokeEnd2")
         
         /*
          * Point rotation
@@ -282,7 +306,6 @@ extension OrbitView {
         let vpz = animation(keyPath: AnimKey.rotation.z.rawValue, from: 0.0, to: CGFloat.pi.multiplied(by: 2.0), repeatCount: Float.greatestFiniteMagnitude, duration: 8.0, timingFunction: kCAMediaTimingFunctionLinear, autoreverses: false)
         
         vp.layer.add(vpz, forKey: "vpz")
-        vp2.layer.add(vpz, forKey: "vpz2")
         
         let vpx = animation(keyPath: AnimKey.rotation.x.rawValue, from: CGFloat.pi.divided(by: 4.0).adding(-0.0001), to: CGFloat.pi.divided(by: 4.0).adding(0.0001), repeatCount: Float.greatestFiniteMagnitude, duration: 8.0, timingFunction: kCAMediaTimingFunctionLinear, autoreverses: true)
         
