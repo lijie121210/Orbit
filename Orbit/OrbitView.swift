@@ -176,10 +176,11 @@ extension OrbitView {
         return star
     }
     
-    func point(width: CGFloat = 2.0) -> UIView {
+    func point(width: CGFloat = 2.0, withAnimation animation: CAKeyframeAnimation, animationkey: String) -> UIView {
         let p = UIView(frame: CGRect(origin: CGPoint.zero, size: CGSize(width: width, height: width)))
         p.layer.cornerRadius = width.divided(by: 2.0)
         p.backgroundColor = .black
+        p.layer.add(animation, forKey: animationkey)
         return p
     }
     
@@ -232,6 +233,78 @@ extension OrbitView {
         return path
     }
     
+    
+    var xrotationForHorizontalRing: CABasicAnimation {
+        return CABasicAnimation(keyPath: AnimKey.rotation.x.rawValue,
+                                from: CGFloat.pi.divided(by: 2.0), to: CGFloat.pi.divided(by: -2.0),
+                                repeatCount: Float.greatestFiniteMagnitude, duration: 6.0,
+                                timingFunction: kCAMediaTimingFunctionLinear, autoreverses: false)
+    }
+    
+    var zrotationForHorizontalRing: CABasicAnimation {
+        return CABasicAnimation(keyPath: AnimKey.rotation.z.rawValue,
+                                from: CGFloat.pi.divided(by: -6.0),
+                                to: CGFloat.pi.divided(by: 6.0),
+                                repeatCount: Float.greatestFiniteMagnitude,
+                                duration: 6.0, timingFunction: kCAMediaTimingFunctionLinear, autoreverses: true)
+    }
+    
+    var yrotationForVerticalRing: CABasicAnimation {
+        return CABasicAnimation(keyPath: AnimKey.rotation.y.rawValue,
+                                from: CGFloat.pi.multiplied(by: 3.0).divided(by: 8.0),
+                                to: CGFloat.pi.multiplied(by: 5.0).divided(by: 8.0),
+                                repeatCount: Float.greatestFiniteMagnitude,duration: 4.0,
+                                timingFunction: kCAMediaTimingFunctionEaseInEaseOut,autoreverses: true)
+    }
+    
+    var zrotationForVerticalRing: CABasicAnimation {
+        return animation(keyPath: AnimKey.rotation.z.rawValue,
+                         from: CGFloat.pi.divided(by: -12.0),
+                         to: CGFloat.pi.divided(by: 12.0),
+                         repeatCount: Float.greatestFiniteMagnitude,
+                         duration: 4.0,
+                         timingFunction: kCAMediaTimingFunctionEaseInEaseOut,
+                         autoreverses: true)
+    }
+    
+    var zrotationForPointContainer: CABasicAnimation {
+        return animation(keyPath: AnimKey.rotation.z.rawValue,
+                         from: 0.0, to: CGFloat.pi.multiplied(by: 2.0),
+                         repeatCount: Float.greatestFiniteMagnitude,
+                         duration: 8.0,
+                         timingFunction: kCAMediaTimingFunctionLinear,
+                         autoreverses: false)
+    }
+    
+    var zrotationForPointContainer2: CABasicAnimation {
+        return animation(keyPath: AnimKey.rotation.z.rawValue,
+                         from: 0.0, to: CGFloat.pi.multiplied(by: 2.0),
+                         repeatCount: Float.greatestFiniteMagnitude,
+                         duration: 6.0,
+                         timingFunction: kCAMediaTimingFunctionEaseInEaseOut,
+                         autoreverses: false)
+    }
+    
+    var xrotationForPointContainer: CABasicAnimation {
+        return animation(keyPath: AnimKey.rotation.x.rawValue,
+                         from: CGFloat.pi.divided(by: 4.0).multiplied(by: 1.6).adding(-0.0001),
+                         to: CGFloat.pi.divided(by: 4.0).multiplied(by: 1.6).adding(0.0001),
+                         repeatCount: Float.greatestFiniteMagnitude,
+                         duration: 8.0,
+                         timingFunction: kCAMediaTimingFunctionLinear,
+                         autoreverses: true)
+    }
+    
+    var yrotationForPointContainer: CABasicAnimation {
+        return animation(keyPath: AnimKey.rotation.y.rawValue,
+                         from: CGFloat.pi.divided(by: 4.0).multiplied(by: 1.6).adding(-0.0001),
+                         to: CGFloat.pi.divided(by: 4.0).multiplied(by: 1.6).adding(0.0001),
+                         repeatCount: Float.greatestFiniteMagnitude,
+                         duration: 8.0,
+                         timingFunction: kCAMediaTimingFunctionLinear,
+                         autoreverses: true)
+    }
+    
     func launchOrbit() {
     
         let view = self
@@ -249,71 +322,37 @@ extension OrbitView {
         view.addSubview(vi)
         
         /// 创建两个大环的父视图
-        let vx = ring(tailor: tailor)
-        let vy = ring(tailor: tailor)
+        let horizontalRing = ring(tailor: tailor)
+        let vertivalRing = ring(tailor: tailor)
         
-        view.addSubview(vx)
-        view.addSubview(vy)
+        horizontalRing.layer.add(xrotationForHorizontalRing, forKey: "xrotationForHorizontalRing")
+        horizontalRing.layer.add(zrotationForHorizontalRing, forKey: "zrotationForHorizontalRing")
+        
+        vertivalRing.layer.add(yrotationForVerticalRing, forKey: "yrotationForVerticalRing")
+        vertivalRing.layer.add(zrotationForVerticalRing, forKey: "zrotationForVerticalRing")
+        
+        view.addSubview(horizontalRing)
+        view.addSubview(vertivalRing)
         
         /// 创建两个点的父视图
-        let vp = star(tailor: tailor)
-        let vp2 = star(tailor: tailor)
+        let pointContainer1 = star(tailor: tailor)
+        let pointContainer2 = star(tailor: tailor)
 
-        view.addSubview(vp)
-        view.addSubview(vp2)
+        view.addSubview(pointContainer1)
+        view.addSubview(pointContainer2)
         
+        /// 创建一个点        
+        let an = positionAnimation(for: pointContainer1.bounds.insetBy(dx: 4, dy: 4), duration: 7.0)
         
-        /// 创建一个点
+        pointContainer1.addSubview(point(width: 3, withAnimation: an, animationkey: "point1"))
+        pointContainer2.addSubview(point(width: 3, withAnimation: an, animationkey: "point2"))
         
-        let p1 = point(width: 4.0)
-        vp.addSubview(p1)
-
-        let p2 = point(width: 4.0)
-        vp2.addSubview(p2)
-        
-        let an = positionAnimation(for: vp.bounds.insetBy(dx: 4, dy: 4), duration: 10.0)
-        p1.layer.add(an, forKey: "p1")
-        p2.layer.add(an, forKey: "p2")
-        
-        /* Animation */
-        
-        /*
-         * The rotation of the circle in the horizontal direction
-         */
-        let vxrx = animation(keyPath: AnimKey.rotation.x.rawValue, from: CGFloat.pi.divided(by: 2.0), to: CGFloat.pi.divided(by: -2.0), repeatCount: Float.greatestFiniteMagnitude, duration: 6.0, timingFunction: kCAMediaTimingFunctionLinear, autoreverses: false)
-        
-        vx.layer.add(vxrx, forKey: "vxx")
-        
-        let vxrz = animation(keyPath: AnimKey.rotation.z.rawValue, from: CGFloat.pi.divided(by: -6.0), to: CGFloat.pi.divided(by: 6.0), repeatCount: Float.greatestFiniteMagnitude, duration: 6.0, timingFunction: kCAMediaTimingFunctionLinear, autoreverses: true)
-
-        vx.layer.add(vxrz, forKey: "vxz")
-        
-        /*
-         * The rotation of the circle in the vertical direction
-         */
-        let vyry = animation(keyPath: AnimKey.rotation.y.rawValue, from: CGFloat.pi.multiplied(by: 3.0).divided(by: 8.0), to: CGFloat.pi.multiplied(by: 5.0).divided(by: 8.0), repeatCount: Float.greatestFiniteMagnitude, duration: 4.0, timingFunction: kCAMediaTimingFunctionEaseInEaseOut, autoreverses: true)
-
-        vy.layer.add(vyry, forKey: "vyy")
-        
-        let vyrz = animation(keyPath: AnimKey.rotation.z.rawValue, from: CGFloat.pi.divided(by: -12.0), to: CGFloat.pi.divided(by: 12.0), repeatCount: Float.greatestFiniteMagnitude, duration: 4.0, timingFunction: kCAMediaTimingFunctionEaseInEaseOut, autoreverses: true)
-        
-        vy.layer.add(vyrz, forKey: "vyz")
-        
-        
-        /*
-         * Point rotation
-         */
-        let vpz = animation(keyPath: AnimKey.rotation.z.rawValue, from: 0.0, to: CGFloat.pi.multiplied(by: 2.0), repeatCount: Float.greatestFiniteMagnitude, duration: 8.0, timingFunction: kCAMediaTimingFunctionLinear, autoreverses: false)
-        
-        vp.layer.add(vpz, forKey: "vpz")
-        
-        let vpx = animation(keyPath: AnimKey.rotation.x.rawValue, from: CGFloat.pi.divided(by: 4.0).adding(-0.0001), to: CGFloat.pi.divided(by: 4.0).adding(0.0001), repeatCount: Float.greatestFiniteMagnitude, duration: 8.0, timingFunction: kCAMediaTimingFunctionLinear, autoreverses: true)
-        
-        vp.layer.add(vpx, forKey: "vpx")
-        
-        let vpy = animation(keyPath: AnimKey.rotation.y.rawValue, from: CGFloat.pi.divided(by: 4.0).multiplied(by: 3.0).adding(-0.0001), to: CGFloat.pi.divided(by: 4.0).multiplied(by: 3.0).adding(0.0001), repeatCount: Float.greatestFiniteMagnitude, duration: 8.0, timingFunction: kCAMediaTimingFunctionLinear, autoreverses: true)
-        
-        vp2.layer.add(vpy, forKey: "vpy")
+        pointContainer1.layer.add(zrotationForPointContainer, forKey: "zrotationForPointContainer")
+        pointContainer1.layer.add(xrotationForPointContainer, forKey: "xrotationForPointContainer")
+        pointContainer2.layer.add(yrotationForPointContainer, forKey: "yrotationForPointContainer")
+        pointContainer2.layer.add(zrotationForPointContainer2, forKey: "zrotationForPointContainer2")
         
     }
+    
+    
 }
