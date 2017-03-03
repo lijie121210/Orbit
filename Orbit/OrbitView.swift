@@ -9,100 +9,207 @@
 import UIKit
 
 
+public extension CABasicAnimation {
+    
+    public convenience init(keyPath: String, from: CGFloat, to: CGFloat,
+                            repeatCount: Float,
+                            duration: CFTimeInterval,
+                            timingFunction name: String,
+                            autoreverses: Bool) {
+        
+        self.init(keyPath: keyPath)
+        self.fromValue = from
+        self.toValue = to
+        self.repeatCount = repeatCount
+        self.duration = duration
+        self.autoreverses = autoreverses
+        self.timingFunction = CAMediaTimingFunction(name: name)
+    }
+    
+}
+
 class OrbitView: UIView {
     
 }
 
 extension OrbitView {
     
-    func launchOrbit() {
-        let view = self
+    enum AnimKey: String {
         
-        func perspective(on view: UIView, with value: CGFloat = 0.003) {
-            var t = CATransform3DIdentity
-            t.m34 = value
-            view.layer.sublayerTransform = t
+        enum rotation: String {
+            case x = "transform.rotation.x"
+            case y = "transform.rotation.y"
+            case z = "transform.rotation.z"
         }
+        
+        case strokeStart = "strokeStart"
+        
+        case strokeEnd = "strokeEnd"
+    }
+    
+    struct Tailor {
+        
+        var baseSize: CGSize
+        
+        var shortLength: CGFloat {
+            return (baseSize.width > baseSize.height) ? baseSize.height : baseSize.width
+        }
+        
+        /// 计算背景圆参数
+        var radiusOfCircle: CGFloat {
+            return shortLength.divided(by: 3.0)
+        }
+        var xdistanceOfCircle: CGFloat {
+            return (baseSize.width - radiusOfCircle * 2.0).divided(by: 2.0)
+        }
+        var ydistanceOfCircle: CGFloat {
+            return (baseSize.height - radiusOfCircle * 2).divided(by: 2.0)
+        }
+        var widthOfCircle: CGFloat {
+            return radiusOfCircle.multiplied(by: 2.0)
+        }
+        
+        /// 计算环参数
+        var spaceToRing: CGFloat {
+            return shortLength.divided(by: 6.0).multiplied(by: 0.2)
+        }
+        var widthOfRing: CGFloat {
+            return (radiusOfCircle + spaceToRing).multiplied(by: 2.0)
+        }
+        var xdistanceOfRing: CGFloat {
+            return (baseSize.width - widthOfRing).divided(by: 2.0)
+        }
+        var ydistanceOfRing: CGFloat {
+            return (baseSize.height - widthOfRing).divided(by: 2.0)
+        }
+        
+        /// 计算点参数
+        var spaceToStar: CGFloat {
+            return shortLength.divided(by: 6.0).multiplied(by: 0.8)
+        }
+        var widthOfStar: CGFloat {
+            return (radiusOfCircle + spaceToStar).multiplied(by: 2.0)
+        }
+        var xdistanceOfStar: CGFloat {
+            return (baseSize.width - widthOfStar).divided(by: 2.0)
+        }
+        var ydistanceOfStar: CGFloat {
+            return (baseSize.height - widthOfStar).divided(by: 2.0)
+        }
+        
+        
+        init(baseSize: CGSize) {
+            
+            self.baseSize = baseSize
+            
+            if baseSize.width < 60.0 || baseSize.height < 60.0 {
+                print(self, #function, "maybe frame is too small")
+            }
+        }
+        
+    }
+    
+    /// 创建基础动画
+    func animation(keyPath: String, from: CGFloat, to: CGFloat, repeatCount: Float, duration: CFTimeInterval,
+                   timingFunction name: String, autoreverses: Bool) -> CABasicAnimation {
+        
+        return CABasicAnimation(keyPath: keyPath, from: from, to: to,
+                                repeatCount: repeatCount,duration: duration, timingFunction: name, autoreverses: autoreverses)
+    }
+    
+    /// 透视效果
+    func perspective(on view: UIView, with value: CGFloat = 0.003) {
+        var t = CATransform3DIdentity
+        t.m34 = value
+        view.layer.sublayerTransform = t
+    }
+    
+    /// Crescent-like shadows
+    func crescentShapeLayer(radius: CGFloat, fillColor: UIColor = UIColor(white: 0.96, alpha: 1)) -> CAShapeLayer {
+        
+        let path = UIBezierPath(arcCenter: CGPoint(x: radius, y: radius),
+                                  radius: radius - 2.0,
+                                  startAngle: CGFloat.pi.divided(by: -2.0),
+                                  endAngle: CGFloat.pi.divided(by: 2.0),
+                                  clockwise: true)
+        
+        let tpoint = CGPoint(x: radius, y: 2)
+        path.addCurve(to: tpoint, controlPoint1: CGPoint(x: radius * 1.8, y: radius), controlPoint2: tpoint)
+        path.close()
+        
+        let crescent = CAShapeLayer()
+        crescent.path = path.cgPath
+        crescent.fillRule = kCAFillRuleNonZero
+        crescent.fillMode = kCAFillModeForwards
+        crescent.fillColor = fillColor.cgColor
+        
+        return crescent
+    }
+    
+    func backgroundCircle(tailor: Tailor) -> UIView {
+        let vi = UIView(frame: CGRect(x: tailor.xdistanceOfCircle,
+                                      y: tailor.ydistanceOfCircle,
+                                      width: tailor.widthOfCircle,
+                                      height: tailor.widthOfCircle))
+        vi.backgroundColor = UIColor(white: 0.99, alpha: 1)
+        vi.layer.cornerRadius = tailor.radiusOfCircle
+        vi.layer.borderColor = UIColor.black.cgColor
+        vi.layer.borderWidth = 2.0
+        return vi
+    }
+    
+    func ring(tailor: Tailor) -> UIView {
+        let width = tailor.widthOfRing
+        let ring = UIView(frame: CGRect(x: tailor.xdistanceOfRing, y: tailor.ydistanceOfRing, width: width, height: width))
+        ring.layer.cornerRadius = width.divided(by: 2.0)
+        return ring
+    }
+    
+    func star(tailor: Tailor) -> UIView {
+        let width = tailor.widthOfStar
+        let star = UIView(frame: CGRect(x: tailor.xdistanceOfStar, y: tailor.ydistanceOfStar, width: width, height: width))
+        star.layer.cornerRadius = width.divided(by: 2.0)
+        return star
+    }
+    
+    func launchOrbit() {
+    
+        let view = self
         
         perspective(on: self)
         
         // todo: using func
         // todo: recalculate radius based on fram
         
-        let radius: CGFloat = 100.0
-        let dradius: CGFloat = radius * 2.0
-        let offset: CGFloat = 10.0
-        let doffset: CGFloat = offset * 2.0
-        let poffset: CGFloat = 40.0
-        let dpoffset: CGFloat = poffset * 2.0
-        let disX = (view.bounds.width - 200) / 2.0
-        let disY = (view.bounds.height - 200) / 2.0
+        let tailor = Tailor(baseSize: frame.size)
         
-        let vi = UIView(frame: CGRect(x: disX, y: disY, width: dradius, height: dradius))
-        vi.layer.cornerRadius = radius
+        
+        let radius: CGFloat = 100.0
+        let offset: CGFloat = 10.0
+        let poffset: CGFloat = 40.0
+        
+        /// 创建两个200x200的矩形，并剪裁成圆, 
+        /// 背景圆
+        
+        let crescent = crescentShapeLayer(radius: tailor.radiusOfCircle)
+        let vi = backgroundCircle(tailor: tailor)
+        vi.layer.addSublayer(crescent)
         view.addSubview(vi)
         
-        let vr = UIView(frame: CGRect(x: disX, y: disY, width: dradius, height: dradius))
-        vr.layer.cornerRadius = radius
-        view.addSubview(vr)
+        /// 创建两个大环的父视图
+        let vx = ring(tailor: tailor)
+        let vy = ring(tailor: tailor)
         
-        let vx = UIView(frame: CGRect(x: disX - offset, y: disY - offset, width: dradius + doffset, height: dradius + doffset))
-        vx.layer.cornerRadius = radius + offset
         view.addSubview(vx)
-        
-        let vy = UIView(frame: CGRect(x: disX - offset, y: disY - offset, width: dradius + doffset, height: dradius + doffset))
-        vy.layer.cornerRadius = radius + offset
         view.addSubview(vy)
         
-        let vp = UIView(frame: CGRect(x: disX - poffset, y: disY - poffset, width: dradius + dpoffset, height: dradius + dpoffset))
-        vp.layer.cornerRadius = radius + poffset
+        /// 创建两个点的父视图
+        let vp = star(tailor: tailor)
+        let vp2 = star(tailor: tailor)
+
         view.addSubview(vp)
-        
-        let vp2 = UIView(frame: CGRect(x: disX - poffset, y: disY - poffset, width: dradius + dpoffset, height: dradius + dpoffset))
-        vp2.layer.cornerRadius = radius + poffset
         view.addSubview(vp2)
         
-        /*
-         * Static circle
-         */
-        let cpoint = CGPoint(x: radius, y: radius)
-        let cpath = UIBezierPath(arcCenter: cpoint, radius: radius, startAngle: 0, endAngle: 2 * CGFloat(M_PI), clockwise: true)
-        let circle = CAShapeLayer()
-        circle.path = cpath.cgPath
-        circle.fillColor = UIColor.clear.cgColor
-        circle.strokeColor = UIColor.black.cgColor
-        circle.lineWidth = 2.0
-        vi.layer.addSublayer(circle)
-        
-        /*
-         * Shadow of the static circle
-         */
-        let cr2point = CGPoint(x: radius, y: radius)
-        let sr2angle = CGFloat(0)
-        let er2angle = CGFloat(M_PI * 2.0)
-        let cr2path = UIBezierPath(arcCenter: cr2point, radius: radius - 2.0, startAngle: sr2angle, endAngle: er2angle, clockwise: true)
-        let cr2circle = CAShapeLayer()
-        cr2circle.path = cr2path.cgPath
-        cr2circle.fillRule = kCAFillRuleNonZero
-        cr2circle.fillMode = kCAFillModeForwards
-        cr2circle.fillColor = UIColor(white: 0.98, alpha: 1).cgColor
-        vr.layer.addSublayer(cr2circle)
-        
-        let crpoint = CGPoint(x: radius, y: radius)
-        let srangle = CGFloat(-M_PI_2)
-        let erangle = CGFloat(M_PI_2)
-        let crpath = UIBezierPath(arcCenter: crpoint, radius: radius - 2.0, startAngle: srangle, endAngle: erangle, clockwise: true)
-        let tpoint = CGPoint(x: radius, y: 2)
-        let ctpoint = CGPoint(x: radius * 1.8, y: radius)
-        crpath.addCurve(to: tpoint, controlPoint1: ctpoint, controlPoint2: tpoint)
-        crpath.close()
-        
-        let crcircle = CAShapeLayer()
-        crcircle.path = crpath.cgPath
-        crcircle.fillRule = kCAFillRuleNonZero
-        crcircle.fillMode = kCAFillModeForwards
-        crcircle.fillColor = UIColor(white: 0.96, alpha: 1).cgColor
-        vr.layer.addSublayer(crcircle)
         
         /*
          * Circle of the horizontal direction
@@ -158,101 +265,61 @@ extension OrbitView {
         cpcircle2.lineWidth = 4.0
         vp2.layer.addSublayer(cpcircle2)
         
+        
         /* Animation */
+        
         
         
         /*
          * The rotation of the circle in the horizontal direction
          */
-        let rotationXX = CABasicAnimation(keyPath: "transform.rotation.x")
-        rotationXX.fromValue = CGFloat(M_PI_2)
-        rotationXX.toValue = CGFloat(-M_PI_2)
-        rotationXX.repeatCount = MAXFLOAT
-        rotationXX.duration = 6.0
-        rotationXX.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear)
-        vx.layer.add(rotationXX, forKey: "vxx")
+        let vxrx = animation(keyPath: AnimKey.rotation.x.rawValue, from: CGFloat.pi.divided(by: 2.0), to: CGFloat.pi.divided(by: -2.0), repeatCount: Float.greatestFiniteMagnitude, duration: 6.0, timingFunction: kCAMediaTimingFunctionLinear, autoreverses: false)
         
-        let rotationXZ = CABasicAnimation(keyPath: "transform.rotation.z")
-        rotationXZ.fromValue = CGFloat(-M_PI / 6.0)
-        rotationXZ.toValue = CGFloat(M_PI / 6.0)
-        rotationXZ.repeatCount = MAXFLOAT
-        rotationXZ.duration = 6.0
-        rotationXZ.autoreverses = true
-        rotationXZ.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear)
-        vx.layer.add(rotationXZ, forKey: "vxz")
+        vx.layer.add(vxrx, forKey: "vxx")
+        
+        let vxrz = animation(keyPath: AnimKey.rotation.z.rawValue, from: CGFloat.pi.divided(by: -6.0), to: CGFloat.pi.divided(by: 6.0), repeatCount: Float.greatestFiniteMagnitude, duration: 6.0, timingFunction: kCAMediaTimingFunctionLinear, autoreverses: true)
+
+        vx.layer.add(vxrz, forKey: "vxz")
         
         /*
          * The rotation of the circle in the vertical direction
          */
-        let rotationYY = CABasicAnimation(keyPath: "transform.rotation.y")
-        rotationYY.fromValue = CGFloat(M_PI * 3.0 / 8.0)
-        rotationYY.toValue = CGFloat(M_PI * 5.0 / 8.0)
-        rotationYY.repeatCount = MAXFLOAT
-        rotationYY.duration = 4.0
-        rotationYY.autoreverses = true
-        rotationYY.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
-        vy.layer.add(rotationYY, forKey: "vyy")
+        let vyry = animation(keyPath: AnimKey.rotation.y.rawValue, from: CGFloat.pi.multiplied(by: 3.0).divided(by: 8.0), to: CGFloat.pi.multiplied(by: 5.0).divided(by: 8.0), repeatCount: Float.greatestFiniteMagnitude, duration: 4.0, timingFunction: kCAMediaTimingFunctionEaseInEaseOut, autoreverses: true)
+
+        vy.layer.add(vyry, forKey: "vyy")
         
-        let rotationYZ = CABasicAnimation(keyPath: "transform.rotation.z")
-        rotationYZ.fromValue = CGFloat(-M_PI / 12.0)
-        rotationYZ.toValue = CGFloat(M_PI / 12.0)
-        rotationYZ.repeatCount = MAXFLOAT
-        rotationYZ.autoreverses = true
-        rotationYZ.duration = 4.0
-        rotationYZ.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
-        vy.layer.add(rotationYZ, forKey: "vyz")
+        let vyrz = animation(keyPath: AnimKey.rotation.z.rawValue, from: CGFloat.pi.divided(by: -12.0), to: CGFloat.pi.divided(by: 12.0), repeatCount: Float.greatestFiniteMagnitude, duration: 4.0, timingFunction: kCAMediaTimingFunctionEaseInEaseOut, autoreverses: true)
+        
+        vy.layer.add(vyrz, forKey: "vyz")
         
         /*
          * change to Point
          */
-        let startanimate = CABasicAnimation(keyPath: "strokeStart")
-        startanimate.fromValue = 0
-        startanimate.toValue = 1
-        startanimate.duration = 2
-        startanimate.repeatCount = MAXFLOAT
-        startanimate.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear)
-        cpcircle.add(startanimate, forKey: "star_strokeStart")
-        cpcircle2.add(startanimate, forKey: "star_strokeStart2")
+        let circleStroke = animation(keyPath: AnimKey.strokeStart.rawValue, from: 0, to: 1, repeatCount: Float.greatestFiniteMagnitude, duration: 2, timingFunction: kCAMediaTimingFunctionLinear, autoreverses: false)
         
-        let endanimate = CABasicAnimation(keyPath: "strokeEnd")
-        endanimate.fromValue = 0.008
-        endanimate.toValue = 1.008
-        endanimate.duration = 2
-        endanimate.repeatCount = MAXFLOAT
-        endanimate.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear)
-        cpcircle.add(endanimate, forKey: "star_strokeEnd")
-        cpcircle2.add(endanimate, forKey: "star_strokeEnd2")
+        cpcircle.add(circleStroke, forKey: "star_strokeStart")
+        cpcircle2.add(circleStroke, forKey: "star_strokeStart2")
+        
+        let circleStrokeEnd = animation(keyPath: AnimKey.strokeEnd.rawValue, from: 0.008, to: 1.008, repeatCount: Float.greatestFiniteMagnitude, duration: 2, timingFunction: kCAMediaTimingFunctionLinear, autoreverses: false)
+        
+        cpcircle.add(circleStrokeEnd, forKey: "star_strokeEnd")
+        cpcircle2.add(circleStrokeEnd, forKey: "star_strokeEnd2")
         
         /*
          * Point rotation
          */
-        let rotationPZ = CABasicAnimation(keyPath: "transform.rotation.z")
-        rotationPZ.fromValue = CGFloat(0.0)
-        rotationPZ.toValue = CGFloat(M_PI * 2.0)
-        rotationPZ.repeatCount = MAXFLOAT
-        rotationPZ.duration = 8.0;
-        rotationPZ.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear)
-        vp.layer.add(rotationPZ, forKey: "vpz")
-        vp2.layer.add(rotationPZ, forKey: "vpz2")
+        let vpz = animation(keyPath: AnimKey.rotation.z.rawValue, from: 0.0, to: CGFloat.pi.multiplied(by: 2.0), repeatCount: Float.greatestFiniteMagnitude, duration: 8.0, timingFunction: kCAMediaTimingFunctionLinear, autoreverses: false)
         
-        let rotationPX = CABasicAnimation(keyPath: "transform.rotation.x")
-        rotationPX.fromValue = CGFloat(M_PI_4 - 0.0001)
-        rotationPX.toValue = CGFloat(M_PI_4 + 0.0001)
-        rotationPX.repeatCount = MAXFLOAT
-        rotationPX.autoreverses = true
-        rotationPX.duration = 8.0
-        rotationPX.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear)
-        vp.layer.add(rotationPX, forKey: "vpx")
+        vp.layer.add(vpz, forKey: "vpz")
+        vp2.layer.add(vpz, forKey: "vpz2")
         
-        let rotationPY = CABasicAnimation(keyPath: "transform.rotation.y")
-        rotationPY.fromValue = CGFloat(M_PI_4 * 3.0 - 0.0001)
-        rotationPY.toValue = CGFloat(M_PI_4 * 3.0 + 0.0001)
-        rotationPY.repeatCount = MAXFLOAT
-        rotationPY.autoreverses = true
-        rotationPY.duration = 8.0
-        rotationPY.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear)
-        vp2.layer.add(rotationPY, forKey: "vpy")
+        let vpx = animation(keyPath: AnimKey.rotation.x.rawValue, from: CGFloat.pi.divided(by: 4.0).adding(-0.0001), to: CGFloat.pi.divided(by: 4.0).adding(0.0001), repeatCount: Float.greatestFiniteMagnitude, duration: 8.0, timingFunction: kCAMediaTimingFunctionLinear, autoreverses: true)
         
+        vp.layer.add(vpx, forKey: "vpx")
+        
+        let vpy = animation(keyPath: AnimKey.rotation.y.rawValue, from: CGFloat.pi.divided(by: 4.0).multiplied(by: 3.0).adding(-0.0001), to: CGFloat.pi.divided(by: 4.0).multiplied(by: 3.0).adding(0.0001), repeatCount: Float.greatestFiniteMagnitude, duration: 8.0, timingFunction: kCAMediaTimingFunctionLinear, autoreverses: true)
+        
+        vp2.layer.add(vpy, forKey: "vpy")
         
     }
 }

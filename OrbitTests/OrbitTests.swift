@@ -47,4 +47,16 @@ class OrbitTests: XCTestCase {
         print(point2.x, point2.y, point2.z)
     }
     
+    func testCGFloat() {
+        let from = CGFloat.pi.divided(by: 2)
+        let to = CGFloat.pi.divided(by: -2)
+        let repeatCount = Float.greatestFiniteMagnitude
+        
+        XCTAssertEqual(from, CGFloat(M_PI_2))
+        XCTAssertEqual(to, CGFloat(-M_PI_2))
+        XCTAssertEqual(repeatCount, MAXFLOAT)
+        
+        XCTAssertEqual(CGFloat.pi.multiplied(by: 2), CGFloat(M_PI * 2))
+    }
+    
 }
